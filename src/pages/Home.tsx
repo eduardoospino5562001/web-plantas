@@ -62,7 +62,7 @@ export default function Home({ lang }: Props) {
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-red-400 text-xs font-bold tracking-[0.2em] uppercase mb-8 shadow-2xl hover:bg-white/10 transition-all cursor-default">
-              <Zap className="w-3 h-3 fill-red-400" /> Power Solutions
+              <Zap className="w-3 h-3 fill-red-400" /> Plantas Eletricas
             </div>
 
             <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-none drop-shadow-2xl">
