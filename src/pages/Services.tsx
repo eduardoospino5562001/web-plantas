@@ -84,7 +84,7 @@ export default function Services({ lang }: Props) {
                     </p>
 
                     <a 
-                        href="https://wa.me/573001234567" 
+                        href="https://wa.me/573142130308" 
                         target="_blank"
                         className="inline-flex items-center gap-2 text-red-700 font-bold hover:gap-4 transition-all"
                     >

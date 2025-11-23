@@ -64,7 +64,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
             </button>
 
             <a 
-                href="https://wa.me/573142130308"
+                href="https://wa.me/573142130308"  
                 className="bg-slate-900 hover:bg-red-700 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
             >
                 {lang === 'es' ? 'Cotizar' : 'Get Quote'}

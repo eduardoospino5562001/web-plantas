@@ -5,7 +5,7 @@ export default function WhatsAppBtn({ lang }: { lang: 'es' | 'en' }) {
   
   return (
     <a 
-        href={`https://wa.me/573001234567?text=${encodeURIComponent(msg)}`}
+        href={`https://wa.me/573142130308?text=${encodeURIComponent(msg)}`}
         target="_blank"
         rel="noreferrer"
         className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition-all z-50 hover:scale-110 animate-bounce"
