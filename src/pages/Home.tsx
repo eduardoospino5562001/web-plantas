@@ -1,4 +1,4 @@
-import { CheckCircle, ArrowRight, ShieldCheck, Zap, MapPin, Globe, Activity } from 'lucide-react';
+import { CheckCircle, ArrowRight, Zap, Globe, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Props {
