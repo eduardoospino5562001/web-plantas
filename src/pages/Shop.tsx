@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, ShoppingBag, Loader2, AlertCircle, Eye, X } from 'lucide-react';
+import { Search, ShoppingBag, Loader2, AlertCircle, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { client, urlFor } from '../client';
 
 interface Producto {
@@ -19,9 +19,11 @@ export default function Shop({ lang }: Props) {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [loading, setLoading] = useState(true);
     const [busqueda, setBusqueda] = useState("");
-    
-    // --- NUEVO: ESTADO PARA EL PRODUCTO SELECCIONADO (MODAL) ---
     const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
+
+    // --- 1. ESTADOS PARA LA PAGINACIÓN ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8; // ¿Cuántos productos quieres ver por página?
 
     useEffect(() => {
         const query = '*[_type == "producto"] | order(_createdAt desc)';
@@ -33,11 +35,29 @@ export default function Shop({ lang }: Props) {
             .catch(console.error);
     }, []);
 
+    // --- 2. LÓGICA DE FILTRADO ---
     const productosFiltrados = productos.filter(prod => {
         const termino = busqueda.toLowerCase();
         const nombre = prod.nombre?.toLowerCase() || "";
         return nombre.includes(termino);
     });
+
+    // Resetear a la página 1 si el usuario busca algo
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [busqueda]);
+
+    // --- 3. CÁLCULO MATEMÁTICO DE LA PAGINACIÓN ---
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = productosFiltrados.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(productosFiltrados.length / itemsPerPage);
+
+    // Función para cambiar de página (con scroll suave hacia arriba)
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
     <div className="min-h-screen bg-slate-50/50">
@@ -78,15 +98,14 @@ export default function Shop({ lang }: Props) {
                 </div>
             )}
 
+            {/* GRILLA (Mostramos currentItems en vez de todos) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {productosFiltrados.map(prod => (
-                    // Al hacer clic en la tarjeta, abrimos el modal
+                {currentItems.map(prod => (
                     <div 
                         key={prod._id} 
-                        onClick={() => setSelectedProduct(prod)} // <--- CLICK ABRE MODAL
+                        onClick={() => setSelectedProduct(prod)}
                         className="group bg-white rounded-2xl p-4 hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col relative overflow-hidden cursor-pointer"
                     >
-                        
                         {prod.categoria && (
                             <span className="absolute top-4 left-4 z-10 bg-slate-100 text-slate-500 text-[10px] px-2 py-1 rounded-full uppercase font-bold tracking-wider">
                                 {prod.categoria}
@@ -103,8 +122,6 @@ export default function Shop({ lang }: Props) {
                              ) : (
                                  <ShoppingBag className="w-12 h-12 text-slate-200" />
                              )}
-                             
-                             {/* Icono de "Ver" al pasar el mouse */}
                              <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span className="bg-white text-slate-900 px-3 py-1 rounded-full text-xs font-bold shadow flex items-center gap-1">
                                     <Eye className="w-3 h-3" /> Ver detalles
@@ -116,7 +133,6 @@ export default function Shop({ lang }: Props) {
                             <h3 className="font-bold text-slate-900 mb-2 group-hover:text-red-700 transition-colors line-clamp-2 leading-tight">
                                 {prod.nombre}
                             </h3>
-                            {/* Descripción cortada (Preview) */}
                             <p className="text-xs text-slate-500 mb-4 line-clamp-2 leading-relaxed">
                                 {prod.descripcion || "Sin descripción disponible."}
                             </p>
@@ -131,29 +147,61 @@ export default function Shop({ lang }: Props) {
                     </div>
                 ))}
             </div>
+
+            {/* --- 4. CONTROLES DE PAGINACIÓN --- */}
+            {!loading && totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-16">
+                    {/* Botón Anterior */}
+                    <button 
+                        onClick={() => paginate(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                        <ChevronLeft className="w-5 h-5 text-slate-600" />
+                    </button>
+
+                    {/* Números de Página */}
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i + 1}
+                            onClick={() => paginate(i + 1)}
+                            className={`
+                                w-10 h-10 rounded-lg font-bold text-sm transition-all
+                                ${currentPage === i + 1 
+                                    ? 'bg-red-600 text-white shadow-lg shadow-red-200 scale-110' 
+                                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}
+                            `}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+
+                    {/* Botón Siguiente */}
+                    <button 
+                        onClick={() => paginate(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                        <ChevronRight className="w-5 h-5 text-slate-600" />
+                    </button>
+                </div>
+            )}
         </div>
 
-        {/* --- MODAL (VENTANA EMERGENTE) --- */}
+        {/* Modal (Sin cambios, solo lo incluyo para que no se te pierda) */}
         {selectedProduct && (
             <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                {/* Fondo Oscuro */}
                 <div 
                     className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                    onClick={() => setSelectedProduct(null)} // Click afuera cierra
+                    onClick={() => setSelectedProduct(null)}
                 ></div>
-
-                {/* Caja del Modal */}
                 <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden relative z-10 flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
-                    
-                    {/* Botón Cerrar */}
                     <button 
                         onClick={() => setSelectedProduct(null)}
                         className="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 p-2 rounded-full z-20"
                     >
                         <X className="w-5 h-5 text-slate-600" />
                     </button>
-
-                    {/* Imagen Grande */}
                     <div className="w-full md:w-1/2 bg-slate-50 p-8 flex items-center justify-center">
                         {selectedProduct.imagen ? (
                             <img 
@@ -165,24 +213,18 @@ export default function Shop({ lang }: Props) {
                             <ShoppingBag className="w-20 h-20 text-slate-200" />
                         )}
                     </div>
-
-                    {/* Información Completa */}
                     <div className="w-full md:w-1/2 p-8 flex flex-col">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
                             {selectedProduct.categoria}
                         </span>
-                        
                         <h2 className="text-2xl font-black text-slate-900 mb-4 leading-tight">
                             {selectedProduct.nombre}
                         </h2>
-
-                        {/* AQUÍ SE MUESTRA EL TEXTO COMPLETO CON SCROLL SI ES MUY LARGO */}
                         <div className="flex-1 overflow-y-auto max-h-[200px] mb-6 pr-2">
                             <p className="text-slate-600 leading-relaxed text-sm">
                                 {selectedProduct.descripcion || "Sin descripción detallada."}
                             </p>
                         </div>
-
                         <div className="mt-auto pt-6 border-t border-slate-100">
                             <p className="text-xs text-slate-500 mb-1">Precio</p>
                             <div className="flex items-center justify-between gap-4">
@@ -203,7 +245,6 @@ export default function Shop({ lang }: Props) {
                 </div>
             </div>
         )}
-
     </div>
   );
 }
