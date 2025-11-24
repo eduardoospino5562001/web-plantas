@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Globe, Menu, X } from 'lucide-react'; // Importamos X para cerrar
+import { Globe, Menu, X } from 'lucide-react'; 
 import { Link, useLocation } from 'react-router-dom';
 
 interface Props {
@@ -9,24 +9,26 @@ interface Props {
 
 export default function Navbar({ lang, toggleLang }: Props) {
   const location = useLocation();
-  // Estado para controlar si el menú móvil está abierto o cerrado
   const [isOpen, setIsOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path ? "text-red-600 font-bold" : "text-slate-600 hover:text-red-600";
+  // Función para resaltar el link activo
+  const isActive = (path: string) => location.pathname === path ? "text-red-600 font-bold" : "text-slate-800 font-medium";
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100 transition-all">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <nav className="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-100 relative">
+        
+        {/* --- BARRA PRINCIPAL --- */}
+        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center bg-white relative z-50">
           
           {/* 1. LOGO */}
-          <Link to="/" className="flex items-center gap-4 group z-50">
+          <Link to="/" className="flex items-center gap-4 z-50" onClick={() => setIsOpen(false)}>
             <img 
               src="/logo.png" 
               alt="Plantas Eléctricas y Transportes SAS" 
               className="h-12 md:h-20 w-auto object-contain mix-blend-multiply" 
             />
             <div className="flex flex-col justify-center">
-                <h1 className="text-sm md:text-xl font-black text-slate-900 leading-none tracking-tight group-hover:text-red-700 transition-colors uppercase">
+                <h1 className="text-sm md:text-xl font-black text-slate-900 leading-none tracking-tight uppercase">
                     PLANTAS ELÉCTRICAS
                 </h1>
                 <span className="text-[8px] md:text-xs font-bold text-red-600 tracking-widest uppercase mt-0.5">
@@ -35,25 +37,24 @@ export default function Navbar({ lang, toggleLang }: Props) {
             </div>
           </Link>
           
-          {/* 2. NAVEGACIÓN DE ESCRITORIO (Hidden en celular) */}
+          {/* 2. MENÚ ESCRITORIO (Oculto en móvil) */}
           <div className="hidden md:flex gap-8 text-sm font-bold tracking-wide uppercase items-center">
-            <Link to="/" className={`transition-colors py-2 ${isActive('/')}`}>
+            <Link to="/" className={`hover:text-red-600 transition-colors ${isActive('/')}`}>
                 {lang === 'es' ? 'INICIO' : 'HOME'}
             </Link>
-            <Link to="/tienda" className={`transition-colors py-2 ${isActive('/tienda')}`}>
+            <Link to="/tienda" className={`hover:text-red-600 transition-colors ${isActive('/tienda')}`}>
                 {lang === 'es' ? 'REPUESTOS' : 'SPARE PARTS'}
             </Link>
-            <Link to="/servicios" className={`transition-colors py-2 ${isActive('/servicios')}`}>
+            <Link to="/servicios" className={`hover:text-red-600 transition-colors ${isActive('/servicios')}`}>
                 {lang === 'es' ? 'SERVICIOS' : 'SERVICES'}
             </Link>
           </div>
 
-          {/* 3. ACCIONES DE ESCRITORIO */}
+          {/* 3. BOTONES ESCRITORIO (Oculto en móvil) */}
           <div className="hidden md:flex items-center gap-4">
             <button 
                 onClick={toggleLang}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
-                aria-label="Cambiar idioma"
             >
                 <Globe className="w-3.5 h-3.5" />
                 {lang === 'es' ? 'EN' : 'ES'}
@@ -67,48 +68,59 @@ export default function Navbar({ lang, toggleLang }: Props) {
             </a>
           </div>
 
-          {/* 4. BOTÓN HAMBURGUESA MÓVIL (Ahora sí funciona) */}
+          {/* 4. BOTÓN HAMBURGUESA (Solo móvil) */}
           <button 
-            className="md:hidden text-slate-900 p-2 z-50" 
+            className="md:hidden text-slate-900 p-2 rounded-md focus:outline-none" 
             onClick={() => setIsOpen(!isOpen)}
-            aria-label="Abrir menú de navegación" // Esto arregla el error de accesibilidad
+            aria-label="Abrir menú"
           >
-            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+            {isOpen ? <X className="w-8 h-8 text-red-600" /> : <Menu className="w-8 h-8" />}
           </button>
         </div>
 
-        {/* 5. EL MENÚ DESPLEGABLE MÓVIL */}
-        {/* Solo se muestra si isOpen es true */}
-        <div className={`fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-300 md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-            
-            <div className="flex flex-col items-center gap-6 text-xl font-bold uppercase tracking-wider">
+        {/* --- 5. MENÚ DESPLEGABLE MÓVIL (ARREGLADO) --- */}
+        {/* Este bloque aparece DEBAJO de la barra blanca, cubriendo toda la pantalla hacia abajo */}
+        <div 
+            className={`
+                absolute top-full left-0 w-full h-screen bg-white border-t border-slate-100 shadow-xl 
+                flex flex-col items-center pt-10 gap-8
+                transition-all duration-300 ease-in-out transform origin-top
+                ${isOpen ? 'opacity-100 scale-y-100 visible' : 'opacity-0 scale-y-0 invisible'}
+            `}
+        >
+            {/* Enlaces de Navegación Grandes */}
+            <div className="flex flex-col items-center gap-6 w-full">
                 <Link 
                     to="/" 
-                    onClick={() => setIsOpen(false)} // Cierra el menú al hacer clic
-                    className="hover:text-red-600 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                    className="text-xl font-bold text-slate-800 uppercase tracking-widest hover:text-red-600 w-full text-center py-2"
                 >
                     {lang === 'es' ? 'Inicio' : 'Home'}
                 </Link>
                 <Link 
                     to="/tienda" 
                     onClick={() => setIsOpen(false)}
-                    className="hover:text-red-600 transition-colors"
+                    className="text-xl font-bold text-slate-800 uppercase tracking-widest hover:text-red-600 w-full text-center py-2"
                 >
-                    {lang === 'es' ? 'Repuestos' : 'Parts'}
+                    {lang === 'es' ? 'Repuestos' : 'Spare Parts'}
                 </Link>
                 <Link 
                     to="/servicios" 
                     onClick={() => setIsOpen(false)}
-                    className="hover:text-red-600 transition-colors"
+                    className="text-xl font-bold text-slate-800 uppercase tracking-widest hover:text-red-600 w-full text-center py-2"
                 >
                     {lang === 'es' ? 'Servicios' : 'Services'}
                 </Link>
             </div>
 
-            <div className="flex flex-col gap-4 mt-4">
+            {/* Línea divisoria */}
+            <div className="w-20 h-1 bg-slate-100 rounded-full"></div>
+
+            {/* Botones de Acción */}
+            <div className="flex flex-col gap-4 w-full px-10">
                  <button 
                     onClick={() => { toggleLang(); setIsOpen(false); }}
-                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-slate-100 text-slate-900 font-bold"
+                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-100 text-slate-900 font-bold w-full"
                 >
                     <Globe className="w-5 h-5" />
                     {lang === 'es' ? 'Cambiar a Inglés' : 'Switch to Spanish'}
@@ -116,12 +128,13 @@ export default function Navbar({ lang, toggleLang }: Props) {
 
                 <a 
                     href="https://wa.me/573142130308"
-                    className="bg-red-600 text-white px-10 py-3 rounded-full text-lg font-bold shadow-xl"
+                    className="bg-red-600 text-white px-6 py-4 rounded-xl text-lg font-bold shadow-lg text-center w-full"
                 >
-                    {lang === 'es' ? 'Cotizar Ahora' : 'Get Quote'}
+                    {lang === 'es' ? 'Cotizar en WhatsApp' : 'Get Quote'}
                 </a>
             </div>
         </div>
+
     </nav>
   );
 }
