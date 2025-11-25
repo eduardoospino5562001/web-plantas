@@ -124,7 +124,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center justify-between px-8 py-4 ${isActive('/tienda')}`}
               >
-                  {lang === 'es' ? 'REPUESTOS' : 'SPARE PARTS'}
+                  {lang === 'es' ? 'PRODUCTOS' : 'PRODUCTS'}
                   <ChevronRight className="w-4 h-4 opacity-50" />
               </Link>
               <Link 
