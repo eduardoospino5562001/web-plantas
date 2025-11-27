@@ -50,7 +50,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
                   {lang === 'es' ? 'INICIO' : 'HOME'}
               </Link>
               <Link to="/tienda" className={`hover:text-red-600 transition-colors ${location.pathname === '/tienda' ? 'text-red-600' : ''}`}>
-                  {lang === 'es' ? 'REPUESTOS' : 'SPARE PARTS'}
+                  {lang === 'es' ? 'PRODUCTOS' : 'PRODUCTS'}
               </Link>
               <Link to="/servicios" className={`hover:text-red-600 transition-colors ${location.pathname === '/servicios' ? 'text-red-600' : ''}`}>
                   {lang === 'es' ? 'SERVICIOS' : 'SERVICES'}
@@ -124,7 +124,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center justify-between px-8 py-4 ${isActive('/tienda')}`}
               >
-                  {lang === 'es' ? 'PRODUCTOS' : 'PRODUCTS'}
+                   {lang === 'es' ? 'PRODUCTOS' : 'PRODUCTS'}
                   <ChevronRight className="w-4 h-4 opacity-50" />
               </Link>
               <Link 

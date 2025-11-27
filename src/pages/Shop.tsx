@@ -66,7 +66,7 @@ export default function Shop({ lang }: Props) {
         <div className="bg-white border-b border-slate-200 py-12 px-4">
             <div className="max-w-4xl mx-auto text-center">
                 <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                    {lang === 'es' ? 'Catálogo de Repuestos' : 'Product Catalog'}
+                    {lang === 'es' ? 'Catálogo de Productos' : 'Product Catalog'}
                 </h1>
                 
                 <div className="relative max-w-lg mx-auto shadow-lg rounded-full mt-8 transition-all focus-within:ring-2 focus-within:ring-red-500">
