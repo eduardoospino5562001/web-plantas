@@ -101,7 +101,7 @@ export default function Home({ lang }: Props) {
       </div>
 
 
-      {/* --- 3. SECCIÓN "QUIÉNES SOMOS" TIPO GRID (BENTO) --- */}
+     {/* --- 3. SECCIÓN "QUIÉNES SOMOS" TIPO GRID (BENTO) --- */}
       <section className="py-24 px-4 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto">
             
@@ -113,8 +113,9 @@ export default function Home({ lang }: Props) {
             {/* Grid Bento */}
             <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[600px]">
                 
-                {/* Card Grande Izquierda (Texto) */}
-                <div className="md:col-span-2 md:row-span-2 bg-white p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col justify-center relative overflow-hidden group">
+                {/* 1. Card Grande Izquierda (Texto) */}
+                {/* Le agregué 'z-0' para evitar conflictos de capas */}
+                <div className="md:col-span-2 md:row-span-2 bg-white p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col justify-center relative overflow-hidden group z-0">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:scale-110 transition-transform duration-700"></div>
                     <div className="relative z-10">
                         <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center mb-6">
@@ -137,26 +138,42 @@ export default function Home({ lang }: Props) {
                     </div>
                 </div>
 
-                {/* Card Derecha Arriba (Imagen) */}
-                <div className="relative bg-slate-900 rounded-3xl overflow-hidden group shadow-lg">
-                    <img src="/ingeniero.png" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700" alt="Tech" />
+                {/* 2. Card Derecha Arriba (Tecnología) - CORREGIDO */}
+                <div className="relative bg-slate-900 rounded-3xl overflow-hidden group shadow-lg z-0">
+                    {/* Imagen de fondo */}
+                    <img 
+                        src="/ingeniero.png" 
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110" 
+                        alt="Tecnología" 
+                    />
+                    {/* Capa oscura para que se lea el texto */}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                    
                     <div className="absolute bottom-6 left-6 z-10">
                         <span className="text-white font-bold text-xl">Tecnología</span>
                     </div>
                 </div>
 
-                {/* Card Derecha Abajo (Color Accent) */}
-                <div className="bg-gradient-to-br from-red-600 to-red-800 rounded-3xl p-8 flex flex-col justify-between text-white shadow-lg shadow-red-500/30 group hover:-translate-y-1 transition-transform duration-300">
-                {/* IMAGEN DE FONDO (CAMBIA EL LINK AQUÍ) */}
-                  <img 
-                      src="/llanos.png" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-110"
-                      alt="Llaneros"
-                  />
-                    <Globe className="w-10 h-10 opacity-80" />
-                    <div>
-                        <h4 className="text-2xl font-bold mb-2">100% Llaneros</h4>
-                        <p className="text-red-100 text-sm opacity-90">Orgullosamente impulsando la región.</p>
+                {/* 3. Card Derecha Abajo (Llaneros) - CORREGIDO (Aquí estaba el fallo) */}
+                <div className="relative rounded-3xl overflow-hidden group shadow-lg shadow-red-500/30 hover:-translate-y-1 transition-all duration-300 bg-red-900 z-0">
+                    
+                    {/* Imagen de fondo */}
+                    <img 
+                        src="/llanos.png"  // Asegúrate de que esta foto exista en la carpeta public
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-50"
+                        alt="Llaneros"
+                    />
+                    
+                    {/* Capa Roja (Gradient) SIN mix-blend-multiply para evitar el error */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-red-900 via-red-900/50 to-transparent"></div>
+
+                    {/* Contenido */}
+                    <div className="relative z-10 p-8 h-full flex flex-col justify-between text-white">
+                        <Globe className="w-10 h-10 opacity-90 drop-shadow-md" />
+                        <div>
+                            <h4 className="text-2xl font-bold mb-2 drop-shadow-md">100% Llaneros</h4>
+                            <p className="text-red-100 text-sm opacity-90 font-medium">Orgullosamente impulsando la región.</p>
+                        </div>
                     </div>
                 </div>
 
