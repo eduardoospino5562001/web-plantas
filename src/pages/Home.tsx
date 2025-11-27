@@ -139,7 +139,7 @@ export default function Home({ lang }: Props) {
 
                 {/* Card Derecha Arriba (Imagen) */}
                 <div className="relative bg-slate-900 rounded-3xl overflow-hidden group shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1590634350748-3e37b98b74b6?auto=format&fit=crop&w=600&q=80" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700" alt="Tech" />
+                    <img src="/ingeniero.png" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700" alt="Tech" />
                     <div className="absolute bottom-6 left-6 z-10">
                         <span className="text-white font-bold text-xl">Tecnología</span>
                     </div>
@@ -147,6 +147,12 @@ export default function Home({ lang }: Props) {
 
                 {/* Card Derecha Abajo (Color Accent) */}
                 <div className="bg-gradient-to-br from-red-600 to-red-800 rounded-3xl p-8 flex flex-col justify-between text-white shadow-lg shadow-red-500/30 group hover:-translate-y-1 transition-transform duration-300">
+                {/* IMAGEN DE FONDO (CAMBIA EL LINK AQUÍ) */}
+                  <img 
+                      src="/llanos.png" 
+                      className="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-110"
+                      alt="Llaneros"
+                  />
                     <Globe className="w-10 h-10 opacity-80" />
                     <div>
                         <h4 className="text-2xl font-bold mb-2">100% Llaneros</h4>
