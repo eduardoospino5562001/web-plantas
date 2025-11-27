@@ -30,7 +30,7 @@ function App() {
             </Routes>
         </div>
 
-        <Footer text={lang === 'es' ? "© 2025 PowerPlant. Todos los derechos reservados." : "© 2025 PowerPlant. All rights reserved."} />
+        <Footer text={lang === 'es' ? "© 2025 PLANTAS ELÉCTRICAS Y TRANSPORTES S.A.S. Todos los derechos reservados." : "© 2025 POWER PLANTS AND TRANSPORT S.A.S All rights reserved."} />
         <WhatsAppBtn lang={lang} />
 
       </div>
