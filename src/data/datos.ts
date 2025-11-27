@@ -1,13 +1,13 @@
 export interface Producto {
     id: number;
     nombre: string;
-    categoria: string; // 'generador' o 'repuesto'
+    categoria: string; // 'generador'
     precio: string;
     img: string;
 }
 
 export const productos: Producto[] = [
-    // --- REPUESTOS (Vistos en tu captura de la Tienda) ---
+    // --- REPUESTOS 
     {
       id: 1,
       nombre: "Tarjeta AVR SX460",

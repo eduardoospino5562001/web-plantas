@@ -43,7 +43,7 @@ export default function Home({ lang }: Props) {
   return (
     <div className="flex flex-col w-full overflow-hidden">
       
-      {/* --- 1. HERO ULTRA MODERNO --- */}
+      
       <section className="relative min-h-[90vh] flex items-center justify-center bg-black overflow-hidden">
         
         {/* Fondo con Efecto de Energía (Animación sutil CSS) */}
@@ -114,7 +114,7 @@ export default function Home({ lang }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[600px]">
                 
                 {/* 1. Card Grande Izquierda (Texto) */}
-                {/* Le agregué 'z-0' para evitar conflictos de capas */}
+                
                 <div className="md:col-span-2 md:row-span-2 bg-white p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col justify-center relative overflow-hidden group z-0">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:scale-110 transition-transform duration-700"></div>
                     <div className="relative z-10">
@@ -138,7 +138,7 @@ export default function Home({ lang }: Props) {
                     </div>
                 </div>
 
-                {/* 2. Card Derecha Arriba (Tecnología) - CORREGIDO */}
+               
                 <div className="relative bg-slate-900 rounded-3xl overflow-hidden group shadow-lg z-0">
                     {/* Imagen de fondo */}
                     <img 
@@ -154,20 +154,20 @@ export default function Home({ lang }: Props) {
                     </div>
                 </div>
 
-                {/* 3. Card Derecha Abajo (Llaneros) - CORREGIDO (Aquí estaba el fallo) */}
+                {/* 3. Card Derecha Abajo (Llaneros)  */}
                 <div className="relative rounded-3xl overflow-hidden group shadow-lg shadow-red-500/30 hover:-translate-y-1 transition-all duration-300 bg-red-900 z-0">
                     
                     {/* Imagen de fondo */}
                     <img 
-                        src="/llanos.png"  // Asegúrate de que esta foto exista en la carpeta public
+                        src="/llanos.png"  
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-50"
                         alt="Llaneros"
                     />
                     
-                    {/* Capa Roja (Gradient) SIN mix-blend-multiply para evitar el error */}
+                    
                     <div className="absolute inset-0 bg-gradient-to-t from-red-900 via-red-900/50 to-transparent"></div>
 
-                    {/* Contenido */}
+                    
                     <div className="relative z-10 p-8 h-full flex flex-col justify-between text-white">
                         <Globe className="w-10 h-10 opacity-90 drop-shadow-md" />
                         <div>

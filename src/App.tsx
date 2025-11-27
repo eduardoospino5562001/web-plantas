@@ -18,12 +18,12 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-white font-sans text-slate-800 flex flex-col selection:bg-red-100 selection:text-red-900">
         
-        {/* Pasamos el idioma y la función al Navbar */}
+        
         <Navbar lang={lang} toggleLang={toggleLang} />
         
         <div className="flex-1">
             <Routes>
-                {/* Pasamos 'lang' a las páginas que lo necesiten */}
+                {/* Envio de 'lang' a las páginas que lo necesiten */}
                 <Route path="/" element={<Home lang={lang} />} /> 
                 <Route path="/tienda" element={<Shop lang={lang} />} />
                 <Route path="/servicios" element={<Services lang={lang} />} />

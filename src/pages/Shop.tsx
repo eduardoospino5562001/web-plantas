@@ -23,7 +23,7 @@ export default function Shop({ lang }: Props) {
 
     // --- 1. ESTADOS PARA LA PAGINACIÓN ---
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8; // ¿Cuántos productos quieres ver por página?
+    const itemsPerPage = 8; //Productos que se veran por página?
 
     useEffect(() => {
         const query = '*[_type == "producto"] | order(_createdAt desc)';
@@ -188,7 +188,7 @@ export default function Shop({ lang }: Props) {
             )}
         </div>
 
-        {/* Modal (Sin cambios, solo lo incluyo para que no se te pierda) */}
+        
         {selectedProduct && (
             <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
                 <div 

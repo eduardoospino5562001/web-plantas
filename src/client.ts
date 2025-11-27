@@ -3,7 +3,7 @@ import imageUrlBuilder from '@sanity/image-url';
 
 // Configuración de la conexión
 export const client = createClient({
-  projectId: 'h6bevkjr', // <--- ¡PEGA TU CÓDIGO AQUÍ!
+  projectId: 'h6bevkjr', 
   dataset: 'production',
   useCdn: true, // true hace que cargue más rápido (caché)
   apiVersion: '2023-05-03',

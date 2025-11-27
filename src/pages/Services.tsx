@@ -94,7 +94,7 @@ export default function Services({ lang }: Props) {
 
                     {/* BOTÓN CON ENLACE DINÁMICO */}
                     <a 
-                        // AQUÍ ES DONDE OCURRE LA MAGIA:
+                        
                         href={`https://wa.me/573142130308?text=${encodeURIComponent(servicio.msg)}`}
                         target="_blank"
                         className="inline-flex items-center gap-2 text-red-700 font-bold hover:gap-4 transition-all uppercase text-sm tracking-wide"

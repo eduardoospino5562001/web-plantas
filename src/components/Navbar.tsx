@@ -44,7 +44,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
               </div>
             </Link>
             
-            {/* 2. MENÚ ESCRITORIO (Hidden en móvil) */}
+            {/* 2. MENÚ ESCRITORIO */}
             <div className="hidden md:flex gap-8 text-sm font-bold tracking-wide uppercase items-center">
               <Link to="/" className={`hover:text-red-600 transition-colors ${location.pathname === '/' ? 'text-red-600' : ''}`}>
                   {lang === 'es' ? 'INICIO' : 'HOME'}
@@ -57,7 +57,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
               </Link>
             </div>
 
-            {/* 3. BOTONES ESCRITORIO (Hidden en móvil) */}
+            {/* 3. BOTONES ESCRITORIO */}
             <div className="hidden md:flex items-center gap-4">
               <button 
                   onClick={toggleLang}
@@ -75,7 +75,7 @@ export default function Navbar({ lang, toggleLang }: Props) {
               </a>
             </div>
 
-            {/* 4. BOTÓN HAMBURGUESA (Solo móvil) */}
+            {/* 4. BOTÓN HAMBURGUESA */}
             <button 
               className="md:hidden text-slate-900 p-2 -mr-2" 
               onClick={() => setIsOpen(true)}
