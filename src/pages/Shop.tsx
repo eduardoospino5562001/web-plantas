@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Search, ShoppingBag, Loader2, AlertCircle, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { client, urlFor } from '../client';
-
-interface Producto {
-  _id: string;
-  nombre: string;
-  precio: string;
-  categoria: string;
-  imagen: any;
-  descripcion: string;
-}
+import { Search, Loader2, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { client } from '../client';
+import { Producto } from '../types';
+import ProductCard from '../components/ProductCard';   // Importamos la tarjeta
+import ProductModal from '../components/ProductModal'; // Importamos el modal
 
 interface Props {
     lang: 'es' | 'en';
@@ -21,9 +15,9 @@ export default function Shop({ lang }: Props) {
     const [busqueda, setBusqueda] = useState("");
     const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
 
-    // --- 1. ESTADOS PARA LA PAGINACIÓN ---
+    // Paginación
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8; //Productos que se veran por página?
+    const itemsPerPage = 8;
 
     useEffect(() => {
         const query = '*[_type == "producto"] | order(_createdAt desc)';
@@ -35,25 +29,21 @@ export default function Shop({ lang }: Props) {
             .catch(console.error);
     }, []);
 
-    // --- 2. LÓGICA DE FILTRADO ---
+    // Filtros
     const productosFiltrados = productos.filter(prod => {
         const termino = busqueda.toLowerCase();
         const nombre = prod.nombre?.toLowerCase() || "";
         return nombre.includes(termino);
     });
 
-    // Resetear a la página 1 si el usuario busca algo
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [busqueda]);
+    useEffect(() => { setCurrentPage(1); }, [busqueda]);
 
-    // --- 3. CÁLCULO MATEMÁTICO DE LA PAGINACIÓN ---
+    // Cálculos de Paginación
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = productosFiltrados.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(productosFiltrados.length / itemsPerPage);
 
-    // Función para cambiar de página (con scroll suave hacia arriba)
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -98,152 +88,46 @@ export default function Shop({ lang }: Props) {
                 </div>
             )}
 
-            {/* GRILLA (Mostramos currentItems en vez de todos) */}
+            {/* GRILLA: Aquí usamos nuestro componente nuevo */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {currentItems.map(prod => (
-                    <div 
+                    <ProductCard 
                         key={prod._id} 
-                        onClick={() => setSelectedProduct(prod)}
-                        className="group bg-white rounded-2xl p-4 hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col relative overflow-hidden cursor-pointer"
-                    >
-                        {prod.categoria && (
-                            <span className="absolute top-4 left-4 z-10 bg-slate-100 text-slate-500 text-[10px] px-2 py-1 rounded-full uppercase font-bold tracking-wider">
-                                {prod.categoria}
-                            </span>
-                        )}
-
-                        <div className="bg-slate-50 rounded-xl h-48 p-6 flex items-center justify-center mb-4 overflow-hidden relative">
-                             {prod.imagen ? (
-                                 <img 
-                                    src={urlFor(prod.imagen).width(400).url()} 
-                                    alt={prod.nombre} 
-                                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 mix-blend-multiply" 
-                                />
-                             ) : (
-                                 <ShoppingBag className="w-12 h-12 text-slate-200" />
-                             )}
-                             <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span className="bg-white text-slate-900 px-3 py-1 rounded-full text-xs font-bold shadow flex items-center gap-1">
-                                    <Eye className="w-3 h-3" /> Ver detalles
-                                </span>
-                             </div>
-                        </div>
-
-                        <div className="flex-1 flex flex-col">
-                            <h3 className="font-bold text-slate-900 mb-2 group-hover:text-red-700 transition-colors line-clamp-2 leading-tight">
-                                {prod.nombre}
-                            </h3>
-                            <p className="text-xs text-slate-500 mb-4 line-clamp-2 leading-relaxed">
-                                {prod.descripcion || "Sin descripción disponible."}
-                            </p>
-                        </div>
-
-                        <div className="flex items-center justify-between border-t border-slate-50 pt-4 mt-auto">
-                            <span className="font-bold text-lg text-slate-800">{prod.precio}</span>
-                            <button className="bg-slate-900 text-white p-2.5 rounded-full hover:bg-red-600 transition-colors">
-                                <ShoppingBag className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
+                        prod={prod} 
+                        onClick={() => setSelectedProduct(prod)} 
+                    />
                 ))}
             </div>
 
-            {/* --- 4. CONTROLES DE PAGINACIÓN --- */}
+            {/* Controles de Paginación */}
             {!loading && totalPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-16">
-                    {/* Botón Anterior */}
-                    <button 
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
+                    <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30">
                         <ChevronLeft className="w-5 h-5 text-slate-600" />
                     </button>
-
-                    {/* Números de Página */}
                     {Array.from({ length: totalPages }, (_, i) => (
                         <button
                             key={i + 1}
                             onClick={() => paginate(i + 1)}
-                            className={`
-                                w-10 h-10 rounded-lg font-bold text-sm transition-all
-                                ${currentPage === i + 1 
-                                    ? 'bg-red-600 text-white shadow-lg shadow-red-200 scale-110' 
-                                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}
-                            `}
+                            className={`w-10 h-10 rounded-lg font-bold text-sm transition-all ${currentPage === i + 1 ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white text-slate-600 border border-slate-200'}`}
                         >
                             {i + 1}
                         </button>
                     ))}
-
-                    {/* Botón Siguiente */}
-                    <button 
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
+                    <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="p-2 rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-30">
                         <ChevronRight className="w-5 h-5 text-slate-600" />
                     </button>
                 </div>
             )}
         </div>
 
-        
+        {/* MODAL: Aquí usamos nuestro componente nuevo */}
         {selectedProduct && (
-            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                <div 
-                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                    onClick={() => setSelectedProduct(null)}
-                ></div>
-                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden relative z-10 flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
-                    <button 
-                        onClick={() => setSelectedProduct(null)}
-                        className="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 p-2 rounded-full z-20"
-                    >
-                        <X className="w-5 h-5 text-slate-600" />
-                    </button>
-                    <div className="w-full md:w-1/2 bg-slate-50 p-8 flex items-center justify-center">
-                        {selectedProduct.imagen ? (
-                            <img 
-                                src={urlFor(selectedProduct.imagen).url()} 
-                                alt={selectedProduct.nombre} 
-                                className="w-full h-full object-contain mix-blend-multiply max-h-[300px]" 
-                            />
-                        ) : (
-                            <ShoppingBag className="w-20 h-20 text-slate-200" />
-                        )}
-                    </div>
-                    <div className="w-full md:w-1/2 p-8 flex flex-col">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                            {selectedProduct.categoria}
-                        </span>
-                        <h2 className="text-2xl font-black text-slate-900 mb-4 leading-tight">
-                            {selectedProduct.nombre}
-                        </h2>
-                        <div className="flex-1 overflow-y-auto max-h-[200px] mb-6 pr-2">
-                            <p className="text-slate-600 leading-relaxed text-sm">
-                                {selectedProduct.descripcion || "Sin descripción detallada."}
-                            </p>
-                        </div>
-                        <div className="mt-auto pt-6 border-t border-slate-100">
-                            <p className="text-xs text-slate-500 mb-1">Precio</p>
-                            <div className="flex items-center justify-between gap-4">
-                                <span className="text-2xl font-bold text-slate-900">
-                                    {selectedProduct.precio}
-                                </span>
-                                <a 
-                                    href={`https://wa.me/573142130308?text=Hola, estoy interesado en el producto: ${selectedProduct.nombre}`}
-                                    target="_blank"
-                                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
-                                >
-                                    <ShoppingBag className="w-4 h-4" />
-                                    {lang === 'es' ? 'Comprar' : 'Buy Now'}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ProductModal 
+                product={selectedProduct} 
+                onClose={() => setSelectedProduct(null)} 
+                lang={lang} 
+            />
         )}
     </div>
   );
